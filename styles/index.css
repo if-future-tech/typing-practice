@@ -10,7 +10,8 @@
   --radius: 10px;
 }
 body {
-    background-color: #001a33;/*エフェクト確認*/
+  background-color: #001a33;/*エフェクト確認用*/
+  padding-top: var(--header-height); /* ← 全要素繰り下げ */
 }
 /* 全体レイアウト */
 .app-container {
@@ -36,6 +37,15 @@ body {
     z-index: 20; /* canvas より前面 */ 
     box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
 }
+/* canvas を最背面に固定配置してレイアウトを押し下げない */ 
+#seasonal-effect { 
+    position: fixed; /* 文書フローから外す */ 
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */ 
+    width: 100vw; height: 100vh; z-index: 0; /* ヘッダーや他要素より下 */ 
+    pointer-events: none; /* マウス操作を奪わない */ 
+    display: block; } 
+/* ヘッダー内の要素は前面に */ 
+.header > * { position: relative; z-index: 21; }
 
 .title {
   font-size: 1.5rem;
@@ -51,7 +61,6 @@ body {
 
 /* main の上部余白をヘッダー高さ分確保 */
 .main {
-  padding-top: var(--header-height);
   flex: 1;
   width: 100%;
   max-width: 960px;
@@ -61,15 +70,6 @@ body {
   flex-direction: column;
   gap: 24px;
 }
-/* canvas を最背面に固定配置してレイアウトを押し下げない */ 
-#seasonal-effect { 
-    position: fixed; /* 文書フローから外す */ 
-    inset: 0; /* top:0; right:0; bottom:0; left:0; */ 
-    width: 100vw; height: 100vh; z-index: 0; /* ヘッダーや他要素より下 */ 
-    pointer-events: none; /* マウス操作を奪わない */ 
-    display: block; } 
-/* ヘッダー内の要素は前面に */ 
-.header > * { position: relative; z-index: 21; }
 
 /* ScoreBoard */
 .scoreboard {
@@ -177,6 +177,7 @@ body {
   font-size: 0.8rem;
   color: var(--muted-foreground);
 }
+
 
 
 
