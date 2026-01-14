@@ -45,7 +45,7 @@ const keyboardLayout = [
   ]
 ];
 
-export function renderKeyboard() {
+function renderKeyboard() {
   const root = document.getElementById("softKeyboard");
   root.innerHTML = "";
 
@@ -70,17 +70,17 @@ export function renderKeyboard() {
   });
 }
 
-export function highlightKey(key) {
+function highlightKey(key) {
   const el = document.querySelector(`.key[data-key="${key.toLowerCase()}"]`);
   if (el) el.classList.add("pressed");
 }
 
-export function unhighlightKey(key) {
+function unhighlightKey(key) {
   const el = document.querySelector(`.key[data-key="${key.toLowerCase()}"]`);
   if (el) el.classList.remove("pressed");
 }
 
-export function markExpectedKey(key) {
+function markExpectedKey(key) {
   document.querySelectorAll(".key").forEach(k => k.classList.remove("expected"));
   const el = document.querySelector(`.key[data-key="${key.toLowerCase()}"]`);
   if (el) el.classList.add("expected");
