@@ -1,11 +1,5 @@
 /* ============================================================
    タイピングアプリ：完全リファクタリング版
-   - 出題管理
-   - 入力処理
-   - スコア管理
-   - タイマー
-   - サウンド
-   - UIイベント
 ============================================================ */
 
 /* ------------------------------
@@ -34,6 +28,8 @@ const startBtn = document.getElementById("startBtn");
    初期化
 ------------------------------ */
 window.addEventListener("DOMContentLoaded", () => {
+  inputEl.disabled = true; // ← 初期状態で入力禁止
+
   loadWords(() => {
     renderKeyboard();
     populateCategories();
@@ -63,7 +59,7 @@ function populateCategories() {
 function loadRandomWord() {
   if (!window.wordData) return;
 
-  const catId = categoryEl.value; 
+  const catId = categoryEl.value;
   const cat = wordData.categories.find(c => c.id === catId);
   if (!cat) return;
 
@@ -73,9 +69,7 @@ function loadRandomWord() {
   inputValue = "";
   currentIndex = 0;
 
-  inputEl.value = "";   // ← 入力欄クリア
-  inputEl.focus();
-
+  inputEl.value = "";
   renderQuestion();
   updateExpectedKey();
 }
@@ -104,6 +98,8 @@ function updateExpectedKey() {
    入力処理
 ============================================================ */
 inputEl.addEventListener("input", e => {
+  if (inputEl.disabled) return;   // ← 出題前は無視
+  if (!currentWord) return;       // ← currentWord が空なら無視
   if (!isStarted) startTyping();
 
   const newValue = e.target.value;
@@ -135,131 +131,5 @@ inputEl.addEventListener("input", e => {
 
   // 完了判定
   if (newValue === currentWord) {
-    setTimeout(loadRandomWord, 500);
-  }
-});
-
-/* ============================================================
-   スタート処理
-============================================================ */
-function startTyping() {
-  isStarted = true;
-  startTime = Date.now();
-  elapsedTime = 0;
-
-  score = { correct: 0, mistakes: 0 };
-  renderScoreBoard(score.correct, score.mistakes, elapsedTime);
-
-  if (timerInterval) clearInterval(timerInterval);
-
-  timerInterval = setInterval(() => {
-    elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-    renderScoreBoard(score.correct, score.mistakes, elapsedTime);
-  }, 1000);
-}
-
-startBtn.addEventListener("click", () => {
-  isStarted = false;
-  inputEl.value = "";
-  inputValue = "";
-  currentIndex = 0;
-  score = { correct: 0, mistakes: 0 };
-  elapsedTime = 0;
-
-  startTyping();
-  loadRandomWord();
-  inputEl.focus();
-});
-
-/* ============================================================
-   カテゴリ変更
-============================================================ */
-categoryEl.addEventListener("change", e => {
-  selectedCategory = e.target.value;
-
-  isStarted = false;
-  inputEl.value = "";
-  inputValue = "";
-  currentIndex = 0;
-  score = { correct: 0, mistakes: 0 };
-  elapsedTime = 0;
-
-  loadRandomWord();
-  renderScoreBoard(score.correct, score.mistakes, elapsedTime);
-});
-
-/* ============================================================
-   キーボード押下
-============================================================ */
-document.addEventListener("keydown", e => {
-  if (typeof highlightKey === "function") highlightKey(e.key);
-});
-document.addEventListener("keyup", e => {
-  if (typeof unhighlightKey === "function") unhighlightKey(e.key);
-});
-
-/* ============================================================
-   サウンド（効果音 + BGM）
-============================================================ */
-let isSoundMuted = false;
-let isBgmMuted = false;
-
-/* 効果音 */
-function playErrorSound() {
-  if (isSoundMuted) return;
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  osc.frequency.value = 200;
-  osc.connect(ctx.destination);
-  osc.start();
-  setTimeout(() => osc.stop(), 100);
-}
-
-function playTypeSound() {
-  if (isSoundMuted) return;
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  osc.frequency.value = 600;
-  osc.connect(ctx.destination);
-  osc.start();
-  setTimeout(() => osc.stop(), 40);
-}
-
-function playCorrectSound() {
-  if (isSoundMuted) return;
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  osc.frequency.value = 900;
-  osc.connect(ctx.destination);
-  osc.start();
-  setTimeout(() => osc.stop(), 80);
-}
-
-/* BGM */
-const bgm = new Audio("./assets/bgm.mp3");
-bgm.loop = true;
-bgm.volume = 0.4;
-
-/* トグル */
-function toggleSound() {
-  isSoundMuted = !isSoundMuted;
-  document.getElementById("soundIcon").textContent = isSoundMuted ? "🔇" : "🔊";
-}
-
-function toggleBGM() {
-  isBgmMuted = !isBgmMuted;
-  if (isBgmMuted) bgm.pause();
-  else bgm.play();
-  document.getElementById("bgmIcon").textContent = isBgmMuted ? "🔕" : "🎵";
-}
-
-/* ボタン登録 */
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("soundToggle")?.addEventListener("click", toggleSound);
-  document.getElementById("bgmToggle")?.addEventListener("click", toggleBGM);
-});
-
-/* 外部公開 */
-window.playErrorSound = playErrorSound;
-window.playTypeSound = playTypeSound;
-window.playCorrectSound = playCorrectSound;
+    setTimeout(() => {
+      loadRandomWord();
