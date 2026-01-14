@@ -13,7 +13,7 @@ const keyboardLayout = [
     { key: 'q' }, { key: 'w' }, { key: 'e' }, { key: 'r' },
     { key: 't' }, { key: 'y' }, { key: 'u' }, { key: 'i' },
     { key: 'o' }, { key: 'p' }, { key: '[' }, { key: ']' },
-    { key: '\\' }
+    { key: '\\', display: '\\' }
   ],
   [
     { key: 'CapsLock', display: 'Caps', width: 'key-wide' },
@@ -26,7 +26,7 @@ const keyboardLayout = [
     { key: 'k', isHomeRow: true },
     { key: 'l', isHomeRow: true },
     { key: ';', isHomeRow: true },
-    { key: "'" },
+    { key: "'", display: "'" },
     { key: 'Enter', display: '⏎', width: 'key-wide' }
   ],
   [
@@ -39,7 +39,7 @@ const keyboardLayout = [
   [
     { key: 'Control', display: 'Ctrl', width: 'key-mid' },
     { key: 'Alt', display: 'Alt', width: 'key-mid' },
-    { key: ' ', display: 'Space', width: 'key-space' },
+    { key: ' ', display: 'Space', width: 'key-space' }, // ← スペースキーはこれでOK
     { key: 'Alt', display: 'Alt', width: 'key-mid' },
     { key: 'Control', display: 'Ctrl', width: 'key-mid' }
   ]
@@ -54,6 +54,7 @@ function renderKeyboard() {
     rowEl.className = "keyboard-row";
 
     row.forEach(keyData => {
+      if (!keyData.key) return; //keyData.key が undefined のときスキップする  
       const keyEl = document.createElement("div");
       keyEl.className = `key ${keyData.width || ''}`;
       keyEl.dataset.key = keyData.key.toLowerCase();
