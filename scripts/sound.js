@@ -1,8 +1,8 @@
 /* ============================
    サウンド管理フラグ
 ============================ */
-let isSoundMuted = false; // 効果音ミュート
-let isBgmMuted = false;   // BGMミュート
+//let isSoundMuted = false; // 効果音ミュート
+//let isBgmMuted = false;   // BGMミュート
 
 /* ============================
    効果音（タイプ音・正解音・エラー音）
@@ -97,3 +97,4 @@ window.addEventListener("DOMContentLoaded", () => {
 window.playErrorSound = playErrorSound;
 window.playTypeSound = playTypeSound;
 window.playCorrectSound = playCorrectSound;
+
