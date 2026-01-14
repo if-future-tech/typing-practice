@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>タイピング練習</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles/index.css" />
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- 季節エフェクト -->
+  <canvas id="seasonal-effect"></canvas>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">タイピング練習</h1>
+
+    <div class="header-controls">
+      <select id="categorySelect" class="ui-select"></select>
+
+      <button id="startBtn" class="ui-button primary">スタート</button>
+
+      <button id="soundToggle" class="ui-button icon">
+        <span id="soundIcon">🔊</span>
+      </button>
+
+      <button id="bgmToggle" class="ui-button icon">
+        <span id="bgmIcon">🎵</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ScoreBoard -->
+    <div id="scoreBoard" class="scoreboard"></div>
+
+    <!-- 出題 -->
+    <div class="text-display">
+      <p class="label">出題</p>
+      <div id="questionArea" class="question"></div>
+    </div>
+
+    <!-- 入力 -->
+    <div class="input-area">
+      <p class="label">入力</p>
+      <input id="typingInput" type="text" class="ui-input" autocomplete="off" spellcheck="false" />
+    </div>
+
+    <!-- キーボード -->
+    <div id="softKeyboard" class="keyboard"></div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    GitHub Pages対応 | ホームポジションを意識して練習しましょう
+  </footer>
+
+</div>
+
+<!-- JS -->
+<script src="scripts/seasonal-effect.js"></script>
+<script src="scripts/words.js"></script>
+<script src="scripts/keyboard.js"></script>
+<script src="scripts/score.js"></script>
+<script src="scripts/sound.js"></script>
+<script src="scripts/app.js"></script>
+
+</body>
+</html>
