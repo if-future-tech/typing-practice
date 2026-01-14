@@ -9,7 +9,7 @@
   --muted-foreground: #717182;
   --radius: 10px;
 }
-.body {
+body {
     background-color: #001a33;/*エフェクト確認*/
 }
 /* 全体レイアウト */
@@ -177,5 +177,6 @@
   font-size: 0.8rem;
   color: var(--muted-foreground);
 }
+
 
 
