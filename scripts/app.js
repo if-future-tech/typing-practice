@@ -110,7 +110,9 @@ inputEl.addEventListener("input", e => {
 
   // 追加文字の正誤判定
   if (newValue.length > inputValue.length) {
-    if (lastChar !== expected) {
+    const normalize = c => c === "␣" ? " " : c;
+
+    if (normalize(lastChar) !== normalize(expected)) {
       score.mistakes++;
       playErrorSound();
       e.target.value = inputValue;
