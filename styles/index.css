@@ -2,6 +2,7 @@
 /*統合バージョン*/
 /* CSS変数（theme.cssの代替） */
 :root {
+  --header-height: 72px; /* 初期値。JSで実際の高さに同期します */
   --card: #ffffff;
   --border: #ccc;
   --primary: #030213;
@@ -17,14 +18,21 @@
   background: linear-gradient(to bottom right, #eef2ff, #e0e7ff);
 }
 
-/* Header */
+/* ヘッダーを固定表示 */
 .header {
-  background: var(--card);
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    height: var(--header-height); 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 12px 16px; 
+    background: var(--card, #ffffff); 
+    border-bottom: 1px solid var(--border, #e5e7eb); 
+    z-index: 20; /* canvas より前面 */ 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
 }
 
 .title {
@@ -39,8 +47,9 @@
   flex-wrap: wrap;
 }
 
-/* Main */
+/* main の上部余白をヘッダー高さ分確保 */
 .main {
+  padding-top: var(--header-height);
   flex: 1;
   width: 100%;
   max-width: 960px;
@@ -50,6 +59,15 @@
   flex-direction: column;
   gap: 24px;
 }
+/* canvas を最背面に固定配置してレイアウトを押し下げない */ 
+#seasonal-effect { 
+    position: fixed; /* 文書フローから外す */ 
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */ 
+    width: 100vw; height: 100vh; z-index: 0; /* ヘッダーや他要素より下 */ 
+    pointer-events: none; /* マウス操作を奪わない */ 
+    display: block; } 
+/* ヘッダー内の要素は前面に */ 
+.header > * { position: relative; z-index: 21; }
 
 /* ScoreBoard */
 .scoreboard {
@@ -157,3 +175,4 @@
   font-size: 0.8rem;
   color: var(--muted-foreground);
 }
+
