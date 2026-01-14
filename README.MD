@@ -1,7 +1,7 @@
 # Typing Practice App
 
 このアプリは、GitHub Pages で公開できるタイピング練習サイトです。  
-Figma のデザインを基準に UI を構築し、React + TypeScript + Tailwind CSS で実装されています。
+Figma のデザインを基準に UI を構築し、HTML/CSS/JSで実装されています。
 
 ---
 
@@ -57,12 +57,7 @@ GitHub Pages では静的ファイルとしてそのまま配信されます
 
 出題内容は自由に追加・編集できます
 📄 ライセンス
-自由に改変して利用できます。
+MITライセンスに準拠しますが、寄付は歓迎です。
 
-# ✨ 次のステップ
 
-この後は、  
-- `words.ts`（読み込みロジック）  
-- `Prompt.tsx`（出題表示）  
-- `CategorySelect.tsx`（カテゴリ選択UI）  
 
