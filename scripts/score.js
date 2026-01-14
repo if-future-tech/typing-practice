@@ -1,10 +1,10 @@
-export function updateScore(score) {
+function updateScore(score) {
   document.getElementById("correctCount").textContent = score.correct;
   document.getElementById("mistakeCount").textContent = score.mistakes;
 }
 // scripts/score.js
 
-export function calculateScore(correct, mistakes, elapsedTime) {
+function calculateScore(correct, mistakes, elapsedTime) {
   const total = correct + mistakes;
   const accuracy = total > 0 ? ((correct / total) * 100).toFixed(1) : "0.0";
 
@@ -14,13 +14,13 @@ export function calculateScore(correct, mistakes, elapsedTime) {
   return { accuracy, wpm };
 }
 
-export function formatTime(seconds) {
+function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-export function renderScoreBoard(correct, mistakes, elapsedTime) {
+function renderScoreBoard(correct, mistakes, elapsedTime) {
   const { accuracy, wpm } = calculateScore(correct, mistakes, elapsedTime);
 
   const scoreBoard = document.getElementById("scoreBoard");
