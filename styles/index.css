@@ -206,6 +206,29 @@ body {
   border-color: #facc15;
 }
 
+@keyframes homeBlink {
+  0%   { box-shadow: 0 0 4px rgba(250, 204, 21, 0.4); }
+  50%  { box-shadow: 0 0 12px rgba(250, 204, 21, 0.9); }
+  100% { box-shadow: 0 0 4px rgba(250, 204, 21, 0.4); }
+}
+
+.key.home {
+  animation: homeBlink 1.2s infinite;
+  background: #fde047;        /* 明るい黄色 */
+  border-color: #facc15;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+}
+.key.home.pressed {
+  background: #facc15;
+  color: #000;
+}
+.home-dot {
+  width: 6px;
+  height: 6px;
+  background: #facc15;
+  border-radius: 50%;
+  margin-top: 4px;
+}
 /* Footer */
 .footer {
   background: linear-gradient(to top, #3b2f1a, #5a4728); 

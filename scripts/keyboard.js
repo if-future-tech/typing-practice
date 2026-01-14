@@ -58,6 +58,11 @@ function renderKeyboard() {
       keyEl.className = `key ${keyData.width || ''}`;
       keyEl.dataset.key = keyData.key.toLowerCase();
 
+      // ★ ホームポジション強調
+      if (keyData.isHomeRow) {
+        keyEl.classList.add("home");
+      }
+
       keyEl.innerHTML = `
         <span>${keyData.display || keyData.key.toUpperCase()}</span>
         ${keyData.isHomeRow ? `<div class="home-dot"></div>` : ""}
