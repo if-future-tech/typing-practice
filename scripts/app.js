@@ -34,12 +34,12 @@ const startBtn = document.getElementById("startBtn");
    初期化
 ------------------------------ */
 window.addEventListener("DOMContentLoaded", () => {
-  if (typeof loadWords === "function") loadWords();
-  if (typeof renderKeyboard === "function") renderKeyboard();
-
-  populateCategories();
-  loadRandomWord();
-  renderScoreBoard(score.correct, score.mistakes, elapsedTime);
+  loadWords(() => {
+    renderKeyboard();
+    populateCategories();
+    loadRandomWord();
+    renderScoreBoard(score.correct, score.mistakes, elapsedTime);
+  });
 });
 
 /* ============================================================
