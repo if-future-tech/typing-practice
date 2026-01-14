@@ -9,7 +9,9 @@
   --muted-foreground: #717182;
   --radius: 10px;
 }
-
+.body {
+    background-color: #001a33;/*エフェクト確認*/
+}
 /* 全体レイアウト */
 .app-container {
   min-height: 100vh;
@@ -175,4 +177,5 @@
   font-size: 0.8rem;
   color: var(--muted-foreground);
 }
+
 
