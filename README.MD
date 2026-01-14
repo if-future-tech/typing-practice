@@ -1,4 +1,4 @@
-# Typing Practice App
+# Typing Practice
 
 このディレクトリは、GitHub Pagesで公開できるタイピング練習サイトです。  
 Figma のデザインを基準に UI を構築し、HTML/CSS/JSで実装されています。
