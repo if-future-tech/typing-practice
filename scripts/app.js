@@ -133,3 +133,139 @@ inputEl.addEventListener("input", e => {
   if (newValue === currentWord) {
     setTimeout(() => {
       loadRandomWord();
+      inputEl.value = "";
+      inputValue = "";
+      currentIndex = 0;
+    }, 300);
+  }
+});
+
+/* ============================================================
+   スタート処理
+============================================================ */
+function startTyping() {
+  isStarted = true;
+  startTime = Date.now();
+  elapsedTime = 0;
+
+  score = { correct: 0, mistakes: 0 };
+  renderScoreBoard(score.correct, score.mistakes, elapsedTime);
+
+  if (timerInterval) clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+    renderScoreBoard(score.correct, score.mistakes, elapsedTime);
+  }, 1000);
+}
+
+startBtn.addEventListener("click", () => {
+  // 入力欄を有効化
+  inputEl.disabled = false;
+  inputEl.focus();
+
+  // 状態リセット
+  isStarted = false;
+  inputEl.value = "";
+  inputValue = "";
+  currentIndex = 0;
+  score = { correct: 0, mistakes: 0 };
+  elapsedTime = 0;
+
+  // 出題 → タイマー開始
+  loadRandomWord();
+  startTyping();
+});
+
+/* ============================================================
+   カテゴリ変更
+============================================================ */
+categoryEl.addEventListener("change", e => {
+  selectedCategory = e.target.value;
+
+  isStarted = false;
+  inputEl.value = "";
+  inputValue = "";
+  currentIndex = 0;
+  score = { correct: 0, mistakes: 0 };
+  elapsedTime = 0;
+
+  loadRandomWord();
+  renderScoreBoard(score.correct, score.mistakes, elapsedTime);
+});
+
+/* ============================================================
+   キーボード押下
+============================================================ */
+document.addEventListener("keydown", e => {
+  if (typeof highlightKey === "function") highlightKey(e.key);
+});
+document.addEventListener("keyup", e => {
+  if (typeof unhighlightKey === "function") unhighlightKey(e.key);
+});
+
+/* ============================================================
+   サウンド（効果音 + BGM）
+============================================================ */
+let isSoundMuted = false;
+let isBgmMuted = false;
+
+/* 効果音 */
+function playErrorSound() {
+  if (isSoundMuted) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 200;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 100);
+}
+
+function playTypeSound() {
+  if (isSoundMuted) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 600;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 40);
+}
+
+function playCorrectSound() {
+  if (isSoundMuted) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 900;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 80);
+}
+
+/* BGM */
+const bgm = new Audio("./assets/bgm.mp3");
+bgm.loop = true;
+bgm.volume = 0.4;
+
+/* トグル */
+function toggleSound() {
+  isSoundMuted = !isSoundMuted;
+  document.getElementById("soundIcon").textContent = isSoundMuted ? "🔇" : "🔊";
+}
+
+function toggleBGM() {
+  isBgmMuted = !isBgmMuted;
+  if (isBgmMuted) bgm.pause();
+  else bgm.play();
+  document.getElementById("bgmIcon").textContent = isBgmMuted ? "🔕" : "🎵";
+}
+
+/* ボタン登録 */
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("soundToggle")?.addEventListener("click", toggleSound);
+  document.getElementById("bgmToggle")?.addEventListener("click", toggleBGM);
+});
+
+/* 外部公開 */
+window.playErrorSound = playErrorSound;
+window.playTypeSound = playTypeSound;
+window.playCorrectSound = playCorrectSound;
