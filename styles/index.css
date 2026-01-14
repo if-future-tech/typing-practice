@@ -2,7 +2,7 @@
 /*統合バージョン*/
 /* CSS変数（theme.cssの代替） */
 :root {
-  --header-height: 40px; /* 初期値。JSで実際の高さに同期します */
+  --header-height: 48px; /* 初期値。JSで実際の高さに同期します */
   --card: #ffffff;
   --border: #ccc;
   --primary: #030213;
@@ -32,7 +32,7 @@ body {
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
-    padding: 4px 12px; 
+    padding: 2px 12px; 
     background: linear-gradient(to bottom, #ffffff, #e6f2ff); 
     border-bottom: none; 
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
@@ -49,34 +49,36 @@ body {
     display: block; } 
 /* ヘッダー内の要素は前面に */ 
 .header > * { position: relative; z-index: 21; }
-.ui-button, .ui-button.icon { 
-  outline: none; 
-  border: none; 
-} 
-.ui-button:focus, .ui-button.icon:focus { 
-  outline: none; 
-  box-shadow: none; 
-}
-.ui-button, .ui-button.icon { 
-  height: 16px; /* 好きな高さに固定 */ 
-  min-height: 12px; 
-  padding: 0 8px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-}
-.title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary);
-}
 
 .header-controls {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
+ 
+.ui-button:focus, .ui-button.icon:focus { 
+  outline: none; 
+  box-shadow: none; 
+}
+.ui-button, .ui-button.icon { 
+  outline: none; 
+  border: none; 
+  font-size: 14px;
+  height: 24px; /* 好きな高さに固定 */ 
+  min-height: 14px; 
+  padding: 0 6px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
 
+.title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1;
+  margin: 0;
+  color: var(--primary);
+}
 /* main の上部余白をヘッダー高さ分確保 */
 .main {
   flex: 1;
