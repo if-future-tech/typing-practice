@@ -236,7 +236,7 @@ function playCorrectSound() {
 }
 
 /* BGM */
-const bgm = new Audio("../assets/bgm.mp3");
+const bgm = new Audio("./assets/bgm.mp3");
 bgm.loop = true;
 bgm.volume = 0.4;
 
