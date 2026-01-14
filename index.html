@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>タイピング練習</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
   <!-- CSS -->
   <link rel="stylesheet" href="styles/index.css" />
 </head>
 <body>
 
-<div class="app-container">
-
-  <!-- 季節エフェクト -->
-  <canvas id="seasonal-effect"></canvas>
+  <!-- 季節エフェクト（DOM上の位置はどこでも可。CSSで fixed にする） -->
+  <canvas id="seasonal-effect" aria-hidden="true"></canvas>
 
   <!-- Header -->
   <header class="header">
@@ -34,7 +32,7 @@
   </header>
 
   <!-- Main -->
-  <main class="main">
+  <main class="main" id="mainContent">
 
     <!-- ScoreBoard -->
     <div id="scoreBoard" class="scoreboard"></div>
@@ -61,16 +59,13 @@
     GitHub Pages対応 | ホームポジションを意識して練習しましょう
   </footer>
 
-</div>
-
-<!-- JS -->
-<script src="scripts/seasonal-effect.js"></script>
-<script src="scripts/words.js"></script>
-<script src="scripts/keyboard.js"></script>
-<script src="scripts/score.js"></script>
-<script src="scripts/sound.js"></script>
-<script src="scripts/app.js"></script>
+  <!-- JS -->
+  <script src="scripts/seasonal-effect.js"></script>
+  <script src="scripts/words.js"></script>
+  <script src="scripts/keyboard.js"></script>
+  <script src="scripts/score.js"></script>
+  <script src="scripts/sound.js"></script>
+  <script src="scripts/app.js"></script>
 
 </body>
 </html>
-
