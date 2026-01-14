@@ -1,12 +1,7 @@
-// scripts/app.js
-
-import { wordData, loadWords } from "./words.js";
-import { renderKeyboard, highlightKey, unhighlightKey, markExpectedKey } from "./keyboard.js";
-import { playErrorSound } from "./sound.js";
-import { renderScoreBoard } from "./score.js";
+// scripts/app.js（完全版・GitHub Pages対応）
 
 // ------------------------------
-// 状態管理（React の useState 相当）
+// 状態管理
 // ------------------------------
 let selectedCategory = "basic";
 let currentWord = "";
@@ -36,10 +31,16 @@ const bgmToggle = document.getElementById("bgmToggle");
 // ------------------------------
 // 初期化
 // ------------------------------
-window.addEventListener("DOMContentLoaded", async () => {
-  await loadWords();
+window.addEventListener("DOMContentLoaded", () => {
+  if (typeof loadWords === "function") {
+    loadWords();
+  }
+
+  if (typeof renderKeyboard === "function") {
+    renderKeyboard();
+  }
+
   populateCategories();
-  renderKeyboard();
   loadRandomWord();
   renderScoreBoard(score.correct, score.mistakes, elapsedTime);
 });
@@ -48,6 +49,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 // カテゴリ選択 UI
 // ------------------------------
 function populateCategories() {
+  if (!window.wordData || !wordData.categories) return;
+
   wordData.categories.forEach(cat => {
     const opt = document.createElement("option");
     opt.value = cat.id;
@@ -60,10 +63,14 @@ function populateCategories() {
 // ランダム出題
 // ------------------------------
 function loadRandomWord() {
-  const cat = wordData.categories.find(c => c.id === selectedCategory);
-  const words = cat.words;
+  if (!window.wordData) return;
 
+  const cat = wordData.categories.find(c => c.id === selectedCategory);
+  if (!cat) return;
+
+  const words = cat.words;
   currentWord = words[Math.floor(Math.random() * words.length)];
+
   inputValue = "";
   currentIndex = 0;
 
@@ -72,19 +79,21 @@ function loadRandomWord() {
 }
 
 // ------------------------------
-// 出題表示（React の JSX 部分を JS に変換）
+// 出題表示
 // ------------------------------
 function renderQuestion() {
   questionArea.innerHTML = currentWord
     .split("")
     .map((char, idx) => {
+      const displayChar = char === " " ? "␣" : char;
+
       if (idx < inputValue.length) {
-        return `<span class="correct">${char === " " ? "␣" : char}</span>`;
+        return `<span class="correct">${displayChar}</span>`;
       }
       if (idx === currentIndex) {
-        return `<span class="current">${char === " " ? "␣" : char}</span>`;
+        return `<span class="current">${displayChar}</span>`;
       }
-      return `<span class="pending">${char === " " ? "␣" : char}</span>`;
+      return `<span class="pending">${displayChar}</span>`;
     })
     .join("");
 }
@@ -94,11 +103,13 @@ function renderQuestion() {
 // ------------------------------
 function updateExpectedKey() {
   const expected = currentWord[currentIndex] || "";
-  markExpectedKey(expected);
+  if (typeof markExpectedKey === "function") {
+    markExpectedKey(expected);
+  }
 }
 
 // ------------------------------
-// 入力処理（React の handleInputChange）
+// 入力処理
 // ------------------------------
 inputEl.addEventListener("input", e => {
   if (!isStarted) {
@@ -116,7 +127,9 @@ inputEl.addEventListener("input", e => {
   if (newValue.length > inputValue.length) {
     if (lastChar !== expected) {
       score.mistakes++;
-      playErrorSound();
+      if (soundEnabled && typeof playErrorSound === "function") {
+        playErrorSound();
+      }
       e.target.value = inputValue;
       return;
     } else {
@@ -140,7 +153,7 @@ inputEl.addEventListener("input", e => {
 });
 
 // ------------------------------
-// スタート処理（React の handleStart）
+// スタート処理
 // ------------------------------
 function startTyping() {
   isStarted = true;
@@ -165,13 +178,14 @@ startBtn.addEventListener("click", () => {
   currentIndex = 0;
   score = { correct: 0, mistakes: 0 };
   elapsedTime = 0;
+
   startTyping();
   loadRandomWord();
   inputEl.focus();
 });
 
 // ------------------------------
-// カテゴリ変更（React の handleCategoryChange）
+// カテゴリ変更
 // ------------------------------
 categoryEl.addEventListener("change", e => {
   selectedCategory = e.target.value;
@@ -188,10 +202,19 @@ categoryEl.addEventListener("change", e => {
 });
 
 // ------------------------------
-// キーボード押下（React の pressedKey）
+// キーボード押下
 // ------------------------------
-document.addEventListener("keydown", e => highlightKey(e.key));
-document.addEventListener("keyup", e => unhighlightKey(e.key));
+document.addEventListener("keydown", e => {
+  if (typeof highlightKey === "function") {
+    highlightKey(e.key);
+  }
+});
+
+document.addEventListener("keyup", e => {
+  if (typeof unhighlightKey === "function") {
+    unhighlightKey(e.key);
+  }
+});
 
 // ------------------------------
 // 効果音 ON/OFF
@@ -202,7 +225,7 @@ soundToggle.addEventListener("click", () => {
 });
 
 // ------------------------------
-// BGM ON/OFF（React の Web Audio API 部分）
+// BGM ON/OFF
 // ------------------------------
 bgmToggle.addEventListener("click", () => {
   bgmEnabled = !bgmEnabled;
