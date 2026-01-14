@@ -1,53 +1,50 @@
-// scripts/app.js（完全版・GitHub Pages対応）
+/* ============================================================
+   タイピングアプリ：完全リファクタリング版
+   - 出題管理
+   - 入力処理
+   - スコア管理
+   - タイマー
+   - サウンド
+   - UIイベント
+============================================================ */
 
-// ------------------------------
-// 状態管理
-// ------------------------------
+/* ------------------------------
+   状態管理
+------------------------------ */
 let selectedCategory = "basic";
 let currentWord = "";
 let inputValue = "";
 let currentIndex = 0;
+
 let score = { correct: 0, mistakes: 0 };
 let startTime = null;
 let elapsedTime = 0;
 let isStarted = false;
 let timerInterval = null;
 
-let soundEnabled = true;
-let bgmEnabled = false;
-let bgmContext = null;
-let bgmOsc = null;
-
-// ------------------------------
-// DOM 参照
-// ------------------------------
+/* ------------------------------
+   DOM 参照
+------------------------------ */
 const inputEl = document.getElementById("typingInput");
 const categoryEl = document.getElementById("categorySelect");
 const questionArea = document.getElementById("questionArea");
 const startBtn = document.getElementById("startBtn");
-const soundToggle = document.getElementById("soundToggle");
-const bgmToggle = document.getElementById("bgmToggle");
 
-// ------------------------------
-// 初期化
-// ------------------------------
+/* ------------------------------
+   初期化
+------------------------------ */
 window.addEventListener("DOMContentLoaded", () => {
-  if (typeof loadWords === "function") {
-    loadWords();
-  }
-
-  if (typeof renderKeyboard === "function") {
-    renderKeyboard();
-  }
+  if (typeof loadWords === "function") loadWords();
+  if (typeof renderKeyboard === "function") renderKeyboard();
 
   populateCategories();
   loadRandomWord();
   renderScoreBoard(score.correct, score.mistakes, elapsedTime);
 });
 
-// ------------------------------
-// カテゴリ選択 UI
-// ------------------------------
+/* ============================================================
+   カテゴリ選択
+============================================================ */
 function populateCategories() {
   if (!window.wordData || !wordData.categories) return;
 
@@ -57,15 +54,17 @@ function populateCategories() {
     opt.textContent = cat.name;
     categoryEl.appendChild(opt);
   });
+  categoryEl.value = selectedCategory;
 }
 
-// ------------------------------
-// ランダム出題
-// ------------------------------
+/* ============================================================
+   出題処理
+============================================================ */
 function loadRandomWord() {
   if (!window.wordData) return;
 
-  const cat = wordData.categories.find(c => c.id === selectedCategory);
+  const catId = categoryEl.value; 
+  const cat = wordData.categories.find(c => c.id === catId);
   if (!cat) return;
 
   const words = cat.words;
@@ -74,62 +73,50 @@ function loadRandomWord() {
   inputValue = "";
   currentIndex = 0;
 
+  inputEl.value = "";   // ← 入力欄クリア
+  inputEl.focus();
+
   renderQuestion();
   updateExpectedKey();
 }
 
-// ------------------------------
-// 出題表示
-// ------------------------------
+/* 出題表示 */
 function renderQuestion() {
   questionArea.innerHTML = currentWord
     .split("")
     .map((char, idx) => {
       const displayChar = char === " " ? "␣" : char;
 
-      if (idx < inputValue.length) {
-        return `<span class="correct">${displayChar}</span>`;
-      }
-      if (idx === currentIndex) {
-        return `<span class="current">${displayChar}</span>`;
-      }
+      if (idx < inputValue.length) return `<span class="correct">${displayChar}</span>`;
+      if (idx === currentIndex) return `<span class="current">${displayChar}</span>`;
       return `<span class="pending">${displayChar}</span>`;
     })
     .join("");
 }
 
-// ------------------------------
-// 次のキーのハイライト
-// ------------------------------
+/* 次のキーのハイライト */
 function updateExpectedKey() {
   const expected = currentWord[currentIndex] || "";
-  if (typeof markExpectedKey === "function") {
-    markExpectedKey(expected);
-  }
+  if (typeof markExpectedKey === "function") markExpectedKey(expected);
 }
 
-// ------------------------------
-// 入力処理
-// ------------------------------
+/* ============================================================
+   入力処理
+============================================================ */
 inputEl.addEventListener("input", e => {
-  if (!isStarted) {
-    startTyping();
-  }
+  if (!isStarted) startTyping();
 
   const newValue = e.target.value;
-
   if (newValue.length > currentWord.length) return;
 
   const lastChar = newValue[newValue.length - 1];
   const expected = currentWord[newValue.length - 1];
 
-  // 正誤判定
+  // 追加文字の正誤判定
   if (newValue.length > inputValue.length) {
     if (lastChar !== expected) {
       score.mistakes++;
-      if (soundEnabled && typeof playErrorSound === "function") {
-        playErrorSound();
-      }
+      playErrorSound();
       e.target.value = inputValue;
       return;
     } else {
@@ -152,9 +139,9 @@ inputEl.addEventListener("input", e => {
   }
 });
 
-// ------------------------------
-// スタート処理
-// ------------------------------
+/* ============================================================
+   スタート処理
+============================================================ */
 function startTyping() {
   isStarted = true;
   startTime = Date.now();
@@ -184,9 +171,9 @@ startBtn.addEventListener("click", () => {
   inputEl.focus();
 });
 
-// ------------------------------
-// カテゴリ変更
-// ------------------------------
+/* ============================================================
+   カテゴリ変更
+============================================================ */
 categoryEl.addEventListener("change", e => {
   selectedCategory = e.target.value;
 
@@ -201,51 +188,78 @@ categoryEl.addEventListener("change", e => {
   renderScoreBoard(score.correct, score.mistakes, elapsedTime);
 });
 
-// ------------------------------
-// キーボード押下
-// ------------------------------
+/* ============================================================
+   キーボード押下
+============================================================ */
 document.addEventListener("keydown", e => {
-  if (typeof highlightKey === "function") {
-    highlightKey(e.key);
-  }
+  if (typeof highlightKey === "function") highlightKey(e.key);
 });
-
 document.addEventListener("keyup", e => {
-  if (typeof unhighlightKey === "function") {
-    unhighlightKey(e.key);
-  }
+  if (typeof unhighlightKey === "function") unhighlightKey(e.key);
 });
 
-// ------------------------------
-// 効果音 ON/OFF
-// ------------------------------
-soundToggle.addEventListener("click", () => {
-  soundEnabled = !soundEnabled;
-  document.getElementById("soundIcon").textContent = soundEnabled ? "🔊" : "🔇";
+/* ============================================================
+   サウンド（効果音 + BGM）
+============================================================ */
+let isSoundMuted = false;
+let isBgmMuted = false;
+
+/* 効果音 */
+function playErrorSound() {
+  if (isSoundMuted) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 200;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 100);
+}
+
+function playTypeSound() {
+  if (isSoundMuted) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 600;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 40);
+}
+
+function playCorrectSound() {
+  if (isSoundMuted) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 900;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 80);
+}
+
+/* BGM */
+const bgm = new Audio("assets/bgm.mp3");
+bgm.loop = true;
+bgm.volume = 0.4;
+
+/* トグル */
+function toggleSound() {
+  isSoundMuted = !isSoundMuted;
+  document.getElementById("soundIcon").textContent = isSoundMuted ? "🔇" : "🔊";
+}
+
+function toggleBGM() {
+  isBgmMuted = !isBgmMuted;
+  if (isBgmMuted) bgm.pause();
+  else bgm.play();
+  document.getElementById("bgmIcon").textContent = isBgmMuted ? "🔕" : "🎵";
+}
+
+/* ボタン登録 */
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("soundToggle")?.addEventListener("click", toggleSound);
+  document.getElementById("bgmToggle")?.addEventListener("click", toggleBGM);
 });
 
-// ------------------------------
-// BGM ON/OFF
-// ------------------------------
-bgmToggle.addEventListener("click", () => {
-  bgmEnabled = !bgmEnabled;
-
-  if (bgmEnabled) {
-    bgmContext = new AudioContext();
-    bgmOsc = bgmContext.createOscillator();
-    const gain = bgmContext.createGain();
-
-    bgmOsc.frequency.value = 440;
-    gain.gain.value = 0.05;
-
-    bgmOsc.connect(gain);
-    gain.connect(bgmContext.destination);
-    bgmOsc.start();
-
-    document.getElementById("bgmIcon").textContent = "🎵";
-  } else {
-    if (bgmOsc) bgmOsc.stop();
-    if (bgmContext) bgmContext.close();
-    document.getElementById("bgmIcon").textContent = "🎶";
-  }
-});
+/* 外部公開 */
+window.playErrorSound = playErrorSound;
+window.playTypeSound = playTypeSound;
+window.playCorrectSound = playCorrectSound;
