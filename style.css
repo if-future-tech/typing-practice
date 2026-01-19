@@ -14,7 +14,8 @@ body {
 /* App Container */
 .app {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+  background: #0a133a;
+  /*background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);*/
   display: flex;
   flex-direction: column;
   position: relative;
