@@ -1,55 +1,94 @@
-# Typing Practice
+# タイピング練習サイト
 
-このディレクトリは、GitHub Pagesで公開できるタイピング練習サイトです。  
-Figma のデザインを基準に UI を構築し、HTML/CSS/JSで実装されています。
+GitHub Pagesで動作する純粋な静的HTML/CSS/JavaScriptのタイピング練習アプリケーションです。
 
----
+## 機能
 
-## 📁 words.json について
+### 基本機能
+- **QWERTYソフトキーボード表示**
+  - ホームポジションの強調表示（青色ハイライト）
+  - 押下中のキーの強調表示（紫色ハイライト）
+  - 次に押すべきキーの強調表示（黄色アニメーション）
 
-出題される単語・文章は `public/words.json` に定義されています。
+- **カテゴリ別ランダム出題**
+  - 基本単語
+  - プログラミング
+  - 長文
+  - 数字・記号
 
-### 構造
+- **リアルタイム入力判定**
+  - 正誤判定
+  - ミス時の警告音
 
-```ts
-export type WordCategory = {
-  id: string;      // カテゴリID（ユニーク）
-  name: string;    // 表示名
-  words: string[]; // 出題される単語・文章
-};
+- **スコア集計**
+  - 正解数
+  - ミス数
+  - 精度（％）
+  - WPM（Words Per Minute）
+  - 経過時間
 
-export type WordData = {
-  categories: WordCategory[];
-};
+### 追加機能
+- **テロップアニメーション**
+  - 出題エリアで問題がスライドインするアニメーション
 
-編集方法
-public/words.json を開く
-categories 配列に新しいカテゴリを追加する
-既存カテゴリの words に単語や文章を追加するだけでOK
+- **音声機能**
+  - 効果音のON/OFF切り替え
+  - BGMのON/OFF切り替え
 
-例
-{
-  "id": "basic",
-  "name": "基本単語",
-  "words": ["hello world", "typing speed"]
-}
-📁ディレクトリ構成（抜粋）
-typing-practice/
-├─ index.html
-├─ styles/
-├─ scripts/
-└─ public/
-   └─ words.json        ← 出題データ（ここに置く）
+- **季節のパーティクルエフェクト**
+  - 春：桜の花びら
+  - 夏：ホタルの光
+  - 秋：落ち葉
+  - 冬：雪の結晶
 
-🔧出題データの読み込み
-アプリ側では以下のように読み込みます。
-const res = await fetch('/words.json');
-const data: WordData = await res.json();
+## ファイル構成
 
-📝 注意点
-JSON 内にコメントを入れる場合は .jsonc として扱うか、ビルド時に除去してください
-GitHub Pages では静的ファイルとしてそのまま配信されます
-出題内容は自由に追加・編集できます
+```
+/
+├── index.html      # メインHTMLファイル
+├── style.css       # スタイルシート
+├── app.js          # JavaScriptロジック
+├── words.json      # 問題データ
+└── README.md       # このファイル
+```
 
-📄 ライセンス
-MITライセンスに準拠しますが、寄付は歓迎です。
+## GitHub Pagesでの公開方法
+
+1. GitHubリポジトリを作成
+2. すべてのファイルをリポジトリにプッシュ
+3. リポジトリの Settings → Pages で、Sourceを`main`ブランチに設定
+4. 公開されたURLにアクセス
+
+## ローカルでの実行
+
+HTTPサーバーが必要です（`words.json`のfetchのため）。
+
+### Python 3を使用する場合
+```bash
+python -m http.server 8000
+```
+
+### Node.jsのhttp-serverを使用する場合
+```bash
+npx http-server
+```
+
+その後、ブラウザで `http://localhost:8000` にアクセスしてください。
+
+## 使い方
+
+1. カテゴリを選択
+2. 「スタート」ボタンをクリック
+3. 表示された問題を入力エリアに入力
+4. ホームポジションを意識して練習
+
+## ブラウザ対応
+
+- Chrome（推奨）
+- Firefox
+- Safari
+- Edge
+
+## ライセンス
+
+MIT License
