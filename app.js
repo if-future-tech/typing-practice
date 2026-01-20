@@ -140,18 +140,19 @@ function loadRandomWord(words) {
   state.inputValue = '';
   state.currentIndex = 0;
   elements.typingInput.value = '';
+  // ★ 出題切り替え時だけアニメーション
+  elements.wordDisplay.classList.add('animate');
+  setTimeout(() => {
+    elements.wordDisplay.classList.remove('animate');
+  }, 600);
+
   renderWordDisplay();
 }
 
 // Render word display
 function renderWordDisplay() {
   elements.wordDisplay.innerHTML = '';
-  elements.wordDisplay.classList.add('animate');
-  
-  setTimeout(() => {
-    elements.wordDisplay.classList.remove('animate');
-  }, 600);
-  
+
   state.currentWord.split('').forEach((char, idx) => {
     const span = document.createElement('span');
     span.textContent = char === ' ' ? '␣' : char;
